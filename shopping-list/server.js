@@ -37,13 +37,13 @@ app.post('/items', jsonParser, function(request, response) {
     response.status(201).json(item);
 });
 
-app.delete('/items/<id>',jsonParser, function(request,response) {
+app.delete('/items/:id', jsonParser,function(request,response) {
     if (!request.body) {
         return response.sendStatus(400);
     }
-    
-    var item = storage.remove(request.body.name);
-    response.status(201).json(item);
+    var item = storage.delete();
+    response.status(201);
 });
+    
 
 app.listen(process.env.PORT, process.env.IP);
