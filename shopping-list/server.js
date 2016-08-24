@@ -13,9 +13,34 @@ Storage.prototype.add = function(name) {
     return item;
 };
 Storage.prototype.delete = function(id) {
-    var item = {id: this.id};
-    this.items.pop(item);
+    var index = this.getIndexById(id)
+    if(index > -1) {
+       this.items.splice(index,1); 
+    }
+   
 };
+
+Storage.prototype.getIndexById = function(id) {
+    var itemIndex = -1
+    this.items.forEach(function(item,index){
+        if(item.id === Number(id)){
+           itemIndex = index 
+        }
+    })
+        return itemIndex;
+};
+
+Storage.prototype.put = function(item) {
+    var index = this.getIndexById(item.id)
+    if(index > -1) {
+       this.items.splice(index,1,item); 
+    }
+    else {
+        this.items.push(item)
+    }
+   return item;
+};
+
 
 var storage = new Storage();
 storage.add('Broad beans');
@@ -43,9 +68,25 @@ app.post('/items', jsonParser, function(request, response) {
 
 app.delete('/items/:id', jsonParser,function(request,response) {
     console.log(request.params.id);
+    var itemIndex = 
     storage.delete(request.params.id);
-    response.status(200);
+     if (itemIndex === -1){
+         return response.sendStatus(400);
+     }
+    response.status(200).json({});
+   
 });
+
+app.put('/items/:id' , jsonParser, function(request,response) {
+    var item = request.body;
+    var itemIndex = 
+    item.id = request.params.id;
+    storage.put(item);
+    if (itemIndex === -1){
+         return response.sendStatus(400);
+     }
+    response.status(200).json(item);
+})
     
 
 app.listen(process.env.PORT, process.env.IP);
