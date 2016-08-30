@@ -11,15 +11,13 @@ mongoose.connection.once('open', function() {
        content: String
     });
 
-
-var Snippet = mongoose.model('Snippet', snippetSchema);
+    var Snippet = mongoose.model('Snippet', snippetSchema);
 
 var create = function(name, content) {
     var snippet = {
         name: name,
         content: content
     };
-    
     Snippet.create(snippet, function(err, snippet) {
         if (err || !snippet) {
             console.error("Could not create snippet", name);
@@ -63,7 +61,8 @@ var del = function(name, content) {
         console.log("Deleted snippet", snippet.name);
         mongoose.disconnect();
     });
-    var main = function() {
+};
+var main = function() {
         if (process.argv[2] == 'create') {
             create(process.argv[3], process.argv[4]);
         }
@@ -78,12 +77,9 @@ var del = function(name, content) {
         }
         else {
             console.error('Command not recognized');
-            snippetSchema.close();
+            mongoose.disconnect();
         }
     };
 
-    main();
-    
-};
-
+     main();
 });

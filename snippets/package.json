@@ -6,9 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Angie Crellin",
+  "author": "",
   "license": "ISC",
   "dependencies": {
-    "mongodb": "^2.2.8"
+    "mongodb": "^2.2.9"
   }
 }

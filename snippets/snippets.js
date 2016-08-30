@@ -40,6 +40,7 @@ MongoClient.connect('mongodb://localhost/snippets', function(err, db) {
             db.close();
         });
     };
+
     var update = function(name, content) {
         var query = {
             name: name
@@ -98,5 +99,5 @@ MongoClient.connect('mongodb://localhost/snippets', function(err, db) {
         }
     };
 
-    main();
+     main();
 });
