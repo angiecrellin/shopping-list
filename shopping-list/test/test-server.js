@@ -6,10 +6,13 @@ var should = chai.should();
 var app = server.app;
 var storage = server.storage;
 
+
 chai.use(chaiHttp);
 
 
-describe('Shopping List', function() {
+
+
+ describe('Shopping List', function() {
     it('should list items on GET', function(done) {
         chai.request(app)
             .get('/items')
@@ -29,9 +32,9 @@ describe('Shopping List', function() {
                 res.body[2].name.should.equal('Peppers');
                 done();
             });
-    });
+     });
 
-    describe('POST', function() {
+     describe('POST', function() {
 
         it('should add an item on POST', function(done) {
             chai.request(app)
@@ -59,7 +62,7 @@ describe('Shopping List', function() {
                     storage.items[3].name.should.equal('Kale');
                     done();
                 });
-        });
+         });
 
         it('should return an error when posting to id that exists', function(done) {
             chai.request(app)
@@ -110,7 +113,7 @@ describe('Shopping List', function() {
 
 
 
-    describe('PUT', function() {
+     describe('PUT', function() {
 
         it('should edit an item on PUT', function(done) {
             chai.request(app)
@@ -227,13 +230,13 @@ describe('Shopping List', function() {
         });
 
 
-    });
+     });
 
 
 
 
 
-    describe('DELETE', function() {
+     describe('DELETE', function() {
 
         it('should delete an item on DELETE', function(done) {
             chai.request(app)
@@ -288,4 +291,4 @@ describe('Shopping List', function() {
 
 
 
-});
+ });
