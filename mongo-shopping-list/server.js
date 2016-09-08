@@ -51,66 +51,87 @@ app.get('/items', function(req, res) {
     });
 });
 
-app.post('/items', function(req, res) {
-    Item.create({
-        name: req.body.name
-    }, function(err, item) {
-        if (err) {
-            return res.status(500).json({
-                message: 'Internal Server Error'
-            });
-        }
-        res.status(201).json(item);
-    });
-});
- app.put('/items/:id', function(request, response) {
-    var item = request.body;
-    var itemIndex = Item.getIndexById(request.params.id)
-
+app.post('/items', function(request, response) {
     if (!request.body.name) {
         return response.status(400).json({
             message: 'no data sent'
         });
     }
+    Item.create({
+        name: request.body.name
+    }, function(err, item) {
+        if (err) {
+            return response.status(500).json({
+                message: 'Internal Server Error'
+            });
+        }
+        response.status(201).json(item);
+    });
+});
+app.put('/items/:id', function(request, response) {
     
-    else if (item.id !== Number(request.params.id)) {
+    if (!request.body.name) {
+        return response.status(400).json({
+            message: 'no data sent'
+        });
+    }
+    else if (request.body._id !== (request.params.id)) {
         return response.status(400).json({
             message: 'id does not match'
         });
-
     }
-    item.id = Number(request.params.id)
 
 
-    Item.put(item);
-    if (itemIndex === -1) {
-         return response.status(201).json(item);
+    Item.findOneAndUpdate({
+        _id: request.params.id
+    }, {
+        name: request.body.name
+    }, {
+        new: true,
+        upsert: true,
+    }, function(err, result) {
+        if (err) {
+            return response.status(404).json({
+                message: 'id does not exist'
+            });
 
-     }
-    
-
-    response.status(200).json(item);
-})
- 
- 
- 
- app.delete('/items/:id', function(request, response) {
-
-    var itemIndex = Item.getIndexById(request.params.id);
-    if (itemIndex === -1) {
+        }
         
-        return response.status(404).json({
-            message: 'id does not exist'
-        });
-    }
-    Item.delete(request.params.id);
+        response.status(200).json(result);
+
+    });
 
 
-    response.status(200).json({});
+
+
+
+})
+
+
+
+app.delete('/items/:id', function(request, response) {
+
+    Item.remove({
+        _id: request.params.id
+    }, function(err) {
+        if (err) {
+            return response.status(404).json({
+                message: 'id does not exist'
+            });
+
+        }
+        response.status(200).json({});
+
+    });
+
+
+
+
+
 
 });
- 
- 
+
+
 
 
 
@@ -121,7 +142,9 @@ app.use('*', function(req, res) {
 });
 
 var runServer = function(callback) {
+    
     mongoose.connect(config.DATABASE_URL, function(err) {
+        
         if (err && callback) {
             return callback(err);
         }
