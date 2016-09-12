@@ -36,4 +36,35 @@ app.get('/search/:name', function(req, res) {
     });
 });
 
+app.get('/artists/{id}/related-artists/:name', function(req,res){
+    var relatedArtist = getFromApi('artists', {
+        id: 'id'
+    });
+    relatedArtist.on('end', function(artist){
+        var artistsRelated = artist.artistsRelated.id;
+        res.json(artistsRelated);
+    });
+     relatedArtist.on('error', function(code) {
+        res.sendStatus(code);
+    });
+});
+
+
+app.get('artists/{id}/top-tracks/:name', function(req, res) {
+    var topTracks = getFromApi('tracks', {
+        q: 'country'
+    
+        
+    });
+
+    topTracks.on('end', function(tracks) {
+        var artist = tracks.artists.country;
+        res.json(topTracks);
+    });
+
+    topTracks.on('error', function(code) {
+        res.sendStatus(code);
+    });
+});
+
 app.listen(process.env.PORT || 8080);
