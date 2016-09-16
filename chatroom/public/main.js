@@ -7,14 +7,38 @@ $(document).ready(function() {
     var typingMessage = $('#typingMessage');
     var count = $('#count');
     var privateMessage = $('#privateMessage');
-    socket.on('connect',function(){
-       socketId = socket.io.engine.id
-       console.log(socketId)
+    var clientsConnected = $('#connected');
+    var clients = [];
+
+
+
+    socket.on('connect', function() {
+        
+        clients.push(clients);
+        console.log('client connect', clients);
+    });
+
+    socket.on('disconnect', function() {
+            clients.splice(clients.indexOf(clients), 1);
+            console.log('client disconnect', clients)
+    });
+
+        var clientsOnline = function(clients){
+            clientsOnline(clients);
+            clientsConnected.html('<div>' + clients + '</div>'); 
+            console.log('list of clients:', clients)
+
+        }
+
+
+    socket.on('connect', function() {
+        socketId = socket.io.engine.id;
+        console.log(socketId);
         socket.on('privateMessage/#' + socketId, function(privateMessage) {
-            console.log('privateMessage#', privateMessage)
-            getPrivateMessage(privateMessage)
+            console.log('privateMessage#', privateMessage);
+            getPrivateMessage(privateMessage);
         });
-    })
+    });
 
     var addMessage = function(message) {
         messages.append('<div>' + message + '</div>');
@@ -45,7 +69,7 @@ $(document).ready(function() {
     socket.on('connectedCount', function(connectedCount) {
         displayCount(connectedCount);
     });
-    socket.on('typingMessage', function(typingMessage){
+    socket.on('typingMessage', function(typingMessage) {
         setTypingMessage(typingMessage);
     })
 
@@ -70,9 +94,6 @@ $(document).ready(function() {
         }
 
     }
-
-
-
     // Add {user} is typing functionality listening for start typing and stop typing on keydown and send
     input.on('keydown', function(event) {
         if (event.target.value === '') {
@@ -91,24 +112,11 @@ $(document).ready(function() {
 
         }
 
-
-
-
     });
-
-
-
-
-
 
     // Add private messaging by sending events to specific sockets using ID already assigned
     var getPrivateMessage = function(message) {
         privateMessage.html('<div>' + message + '<div>');
     };
-    
-    
-
-    
-
 
 });

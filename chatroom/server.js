@@ -11,7 +11,12 @@ app.use(express.static('public'));
 var server = http.Server(app);
 var io = socket_io(server);
 var connectedCount = 0;
+var clients = [];
 var privateMessage = false
+
+    
+    
+    
 
     io.on('connection', function(socket) {
         console.log('Client connected');
@@ -31,6 +36,17 @@ var privateMessage = false
         });
 
         // Add private messaging by sending events to specific sockets using ID already assigned
+        
+        socket.on('connection',function(){
+            io.sockets.connected(clients)
+            socket.emit(clients)
+            console.log('users online:', clients)
+            
+        });
+        
+        
+    
+        
         
         socket.on('privateMessage#' + socket.id, function(message) {
             console.log('privateMessage#', socket.id, message)
