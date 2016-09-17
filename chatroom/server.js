@@ -14,6 +14,20 @@ var connectedCount = 0;
 var clients = [];
 var privateMessage = false
 
+var usernames = {};
+
+function check_key(v)
+{
+	var val = '';
+	
+	for(var key in usernames)
+    {
+		if(usernames[key] == v)
+		val = key;
+	}
+	return val;
+}
+
     
     
     
@@ -44,7 +58,21 @@ var privateMessage = false
             
         });
         
-        
+        // when the user sends a private msg to a user id, first find the username
+	socket.on('check_user', function(asker, id){
+		console.log("SEE: "+asker); console.log(id);
+		io.sockets.socket(usernames[asker]).emit('msg_user_found', check_key(id));
+	});
+	
+	// when the user sends a private message to a user.. perform this
+	socket.on('msg_user', function(usr, username, msg) {
+		console.log("From user: "+username);
+		console.log("To user: "+usr);
+		console.log(usernames);
+		io.sockets.socket(usernames[usr]).emit('msg_user_handle', username, msg);
+
+		
+	});
     
         
         

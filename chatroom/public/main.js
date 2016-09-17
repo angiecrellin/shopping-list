@@ -9,6 +9,7 @@ $(document).ready(function() {
     var privateMessage = $('#privateMessage');
     var clientsConnected = $('#connected');
     var clients = [];
+    var myUserName = ''
 
 
 
@@ -29,6 +30,10 @@ $(document).ready(function() {
             console.log('list of clients:', clients)
 
         }
+        
+        socket.on('store_username', function (username) {
+		myUserName = username;
+	});
 
 
     socket.on('connect', function() {
