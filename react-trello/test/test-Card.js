@@ -30,5 +30,7 @@ describe('Card component', function() {
         console.log(result)
         result.props.className.should.equal('card')
         result.props.children.length.should.equal(cards.length)
+        var div = result.props.children[1];
+        div.type.should.equal('div');
     }) 
 })
